@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class UserController {
 
     @ResponseBody
+    @RequestMapping("/test")
     public String test(){
         return "123";
     }
