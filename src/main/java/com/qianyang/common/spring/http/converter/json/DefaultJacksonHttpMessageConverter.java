@@ -7,6 +7,7 @@ import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.type.TypeFactory;
 import org.codehaus.jackson.type.JavaType;
+import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpInputMessage;
 import org.springframework.http.HttpOutputMessage;
 import org.springframework.http.MediaType;
@@ -15,22 +16,17 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.http.converter.HttpMessageNotWritableException;
 import org.springframework.util.Assert;
 
+import javax.annotation.Resource;
 import java.io.IOException;
 import java.nio.charset.Charset;
 
 /**
  * Replaces Spring's {org.springframework.http.converter.json.MappingJacksonHttpMessageConverter}, which is
  * difficult to configure for pretty-printing.  This implementation enables pretty-printing easily via a setter/getter.
- * <p/>
- * See <a href="http://stackoverflow.com/questions/6541757/when-using-spring-mvc-for-rest-how-do-you-enable-jackson-to-pretty-print-render">
- *     When using Spring MVC for REST, how do you enable Jackson to pretty-print rendered JSON?</a> and the latest
- *     <a href="https://gist.github.com/2423129">Spring Framework incarnation supporting pretty printing</a>
- *     (not yet released at the time of writing).
  *
- * @author Les Hazlewood
- *
- * 构造方法指定 该MessageCoverter 的 supportedMediaTypes 为 application/json
+ * 替代 Spring 提供的 MappingJacksonHttpMessageConverter, 以便于格式化 json
  */
+@Resource
 public class DefaultJacksonHttpMessageConverter extends AbstractHttpMessageConverter<Object> {
 
     public static final Charset DEFAULT_CHARSET = Charset.forName("UTF-8");
@@ -40,7 +36,7 @@ public class DefaultJacksonHttpMessageConverter extends AbstractHttpMessageConve
     private boolean prettyPrint = false;
 
     /**
-     * Construct a new {@code DefaultJacksonHttpMessageConverter}.
+     * 构造方法指定 该MessageCoverter 的 supportedMediaTypes 为 application/json;utf-8
      */
     public DefaultJacksonHttpMessageConverter() {
         super(new MediaType("application", "json", DEFAULT_CHARSET));
@@ -54,8 +50,10 @@ public class DefaultJacksonHttpMessageConverter extends AbstractHttpMessageConve
 
     @Override
     public boolean canWrite(Class<?> clazz, MediaType mediaType) {
-        //坑
-        System.out.println(mediaType == null ? "" : mediaType.toString());
+        //坑！
+        //controller 的处理方法返回结果时，可能会经过 HttpMessageConverter 的处理(写入 response body)，
+        //如果这里的 mediaType 为 null 的话，下面的debug 会导致空指针异常
+        //System.out.println(mediaType == null ? "" : mediaType.toString());
 
         return objectMapper.canSerialize(clazz) && canWrite(mediaType);
     }
@@ -63,8 +61,9 @@ public class DefaultJacksonHttpMessageConverter extends AbstractHttpMessageConve
     /**
      * Returns the Jackson {@link JavaType} for the specific class.
      * <p/>
-     * <p>Default implementation returns {@link org.codehaus.jackson.map.type.TypeFactory#type(java.lang.reflect.Type)}, but this can be overridden
-     * in subclasses, to allow for custom generic collection handling. For instance:
+     * <p>Default implementation returns {@link org.codehaus.jackson.map.type.TypeFactory#type(java.lang.reflect.Type)},
+     *    but this can be overridden in subclasses, to allow for custom generic collection handling.
+     * For instance:
      * <pre class="code">
      * protected JavaType getJavaType(Class&lt;?&gt; clazz) {
      * if (List.class.isAssignableFrom(clazz)) {
@@ -82,6 +81,9 @@ public class DefaultJacksonHttpMessageConverter extends AbstractHttpMessageConve
         return TypeFactory.type(clazz);
     }
 
+    /*
+     * jsonStr -> Java Bean
+     */
     @Override
     protected Object readInternal(Class<?> clazz, HttpInputMessage inputMessage)
             throws IOException, HttpMessageNotReadableException {
@@ -93,12 +95,19 @@ public class DefaultJacksonHttpMessageConverter extends AbstractHttpMessageConve
         }
     }
 
+    /*
+     * 不要调用该方法
+     * 通过重写方法  canRead / canWrite 来替代
+     */
     @Override
     protected boolean supports(Class<?> clazz) {
         // should not be called, since we override canRead/Write instead
         throw new UnsupportedOperationException();
     }
 
+    /*
+     * Java Bean -> jsonStr
+     */
     @Override
     protected void writeInternal(Object o, HttpOutputMessage outputMessage)
             throws IOException, HttpMessageNotWritableException {
