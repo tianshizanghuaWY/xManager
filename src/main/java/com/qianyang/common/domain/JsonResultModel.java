@@ -11,7 +11,8 @@ import java.io.Serializable;
 public class JsonResultModel<T> implements Serializable{
     private static final long serialVersionUID = 1L;
 
-    private ResultStatusCode code;
+    private ResultStatusCode codeMsg;
+    private int code = 0;
     private T data;
     private HttpStatus httpStatus;
     private String msg;
@@ -20,9 +21,10 @@ public class JsonResultModel<T> implements Serializable{
         super();
     }
 
-    public JsonResultModel(ResultStatusCode code){
+    public JsonResultModel(ResultStatusCode codeMsg){
         super();
-        this.code = code;
+        this.codeMsg = codeMsg;
+        this.code = codeMsg.getCode();
     }
 
     public JsonResultModel(T data) {
@@ -35,18 +37,19 @@ public class JsonResultModel<T> implements Serializable{
         return this;
     }
     public JsonResultModel code(ResultStatusCode code){
-        this.code = code;
+        this.codeMsg = code;
+        this.code = codeMsg.getCode();
         return this;
     }
 
 
 
     //---------------------------- getter / setter --------------------------
-    public ResultStatusCode getCode() {
+    public int getCode() {
         return code;
     }
 
-    public void setCode(ResultStatusCode code) {
+    public void setCode(int code) {
         this.code = code;
     }
 
@@ -72,5 +75,13 @@ public class JsonResultModel<T> implements Serializable{
 
     public void setMsg(String msg) {
         this.msg = msg;
+    }
+
+    public ResultStatusCode getCodeMsg() {
+        return codeMsg;
+    }
+
+    public void setCodeMsg(ResultStatusCode codeMsg) {
+        this.codeMsg = codeMsg;
     }
 }

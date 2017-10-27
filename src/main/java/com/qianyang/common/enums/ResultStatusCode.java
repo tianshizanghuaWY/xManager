@@ -4,18 +4,18 @@ package com.qianyang.common.enums;
  * 接口请求状态码
  */
 public enum ResultStatusCode {
-    SUCCESS("0"),
-    FAILURE("1"),
-    TIMEOUT("301"),
-    EXCEPTION("500");
+    SUCCESS(0),
+    FAILURE(1),
+    TIMEOUT(301),
+    EXCEPTION(500);
 
-    private String code;
+    private int code;
 
-    private ResultStatusCode(String code) {
+    private ResultStatusCode(int code) {
         this.code = code;
     }
 
-    public String getCode() {
+    public int getCode() {
         return code;
     }
 }

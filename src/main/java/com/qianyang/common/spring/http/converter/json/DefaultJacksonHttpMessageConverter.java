@@ -1,26 +1,23 @@
 package com.qianyang.common.spring.http.converter.json;
 
-import org.codehaus.jackson.JsonEncoding;
-import org.codehaus.jackson.JsonGenerationException;
-import org.codehaus.jackson.JsonGenerator;
-import org.codehaus.jackson.JsonParseException;
+import org.codehaus.jackson.*;
+import org.codehaus.jackson.map.JsonSerializer;
 import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.map.SerializerProvider;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.codehaus.jackson.map.type.TypeFactory;
 import org.codehaus.jackson.type.JavaType;
-import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpInputMessage;
 import org.springframework.http.HttpOutputMessage;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.AbstractHttpMessageConverter;
-import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.http.converter.HttpMessageNotWritableException;
 import org.springframework.util.Assert;
 
-import javax.annotation.Resource;
 import java.io.IOException;
 import java.nio.charset.Charset;
-import java.util.List;
+import java.text.SimpleDateFormat;
 
 /**
  * Replaces Spring's {org.springframework.http.converter.json.MappingJacksonHttpMessageConverter}, which is
@@ -32,7 +29,9 @@ public class DefaultJacksonHttpMessageConverter extends AbstractHttpMessageConve
 
     public static final Charset DEFAULT_CHARSET = Charset.forName("UTF-8");
 
-    private ObjectMapper objectMapper = new ObjectMapper();
+    //使用自定义的 ObjectMapper
+    private ObjectMapper objectMapper = new ObjectMapperCustomer(); //ObjectMapper();
+
     private boolean prefixJson = false;
     private boolean prettyPrint = false;
 
@@ -179,10 +178,41 @@ public class DefaultJacksonHttpMessageConverter extends AbstractHttpMessageConve
         this.prefixJson = prefixJson;
     }
 
-//    @Override
-//    public void extendMessageConverters(List<HttpMessageConverter<?>> converters) {
-//        DefaultJacksonHttpMessageConverter converter = new DefaultJacksonHttpMessageConverter();
-//        converters.add(converter);
-//    }
+    /*
+     * 自定义 ObjectMapper
+     * 处理对象为null的情形
+     */
+    private class ObjectMapperCustomer extends ObjectMapper{
+        ObjectMapperCustomer(){
+            super();
+
+            //当属性为空时, 不实例化该属性，注意：只对VO起作用，Map List不起作用
+            this.setSerializationInclusion(JsonSerialize.Inclusion.NON_NULL);
+
+            // 空值处理为空串
+            this.getSerializerProvider().setNullValueSerializer(
+                    new JsonSerializer<Object>() {
+                        @Override
+                        public void serialize(Object value, JsonGenerator jg,
+                                              SerializerProvider sp) throws IOException,
+                                JsonProcessingException {
+                            //do nothing
+
+                            jg.writeString("");
+                        }
+                    });
+            this.setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
+
+            // 允许单引号
+//      this.configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true);
+//      // 字段和值都加引号
+//      this.configure(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES, true);
+//      // 数字也加引号
+//      this.configure(JsonGenerator.Feature.WRITE_NUMBERS_AS_STRINGS, true);
+//      this.configure(JsonGenerator.Feature.QUOTE_NON_NUMERIC_NUMBERS, true);
+
+        }
+
+    }
 }
 
