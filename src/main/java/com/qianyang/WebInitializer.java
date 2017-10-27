@@ -25,4 +25,6 @@ public class WebInitializer implements WebApplicationInitializer{
         servlet.addMapping("/");
         servlet.setLoadOnStartup(1);
     }
+
+
 }
