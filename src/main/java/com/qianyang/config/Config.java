@@ -2,12 +2,12 @@ package com.qianyang.config;
 
 
 import com.qianyang.common.spring.http.converter.json.DefaultJacksonHttpMessageConverter;
+import org.springframework.web.servlet.i18n.AcceptHeaderLocaleResolver;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.springframework.web.servlet.view.JstlView;
 import org.springframework.web.servlet.view.UrlBasedViewResolver;
@@ -62,6 +62,11 @@ public class Config extends WebMvcConfigurerAdapter {
 
         //converters.add(defaultJacksonHttpMessageConverter());
         converters.add(0, defaultJacksonHttpMessageConverter());
+    }
+
+    @Bean
+    public AcceptHeaderLocaleResolver localResolver(){
+        return new AcceptHeaderLocaleResolver();
     }
 }
 
