@@ -1,15 +1,19 @@
 package com.qianyang.common.exception.handler;
 
+import com.qianyang.common.annotations.ResponseMapping;
+import com.qianyang.common.enums.ResponseType;
 import com.qianyang.common.exception.domain.RestError;
 import com.qianyang.common.exception.resolver.ErrorResolver;
 import com.qianyang.common.exception.resolver.impl.RestErrorResolver;
 import com.qianyang.common.spring.http.converter.RestErrorConverter;
 import com.qianyang.common.spring.http.converter.impl.MapRestErrorConverter;
 import com.qianyang.common.spring.http.converter.json.DefaultJacksonHttpMessageConverter;
+import com.qianyang.common.util.ValidatorUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.http.HttpInputMessage;
 import org.springframework.http.HttpOutputMessage;
 import org.springframework.http.MediaType;
@@ -17,7 +21,9 @@ import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.server.ServletServerHttpRequest;
 import org.springframework.http.server.ServletServerHttpResponse;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.context.request.ServletWebRequest;
+import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
 import org.springframework.web.servlet.handler.AbstractHandlerExceptionResolver;
@@ -28,6 +34,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -127,7 +134,7 @@ public class CustomerExceptionHandler extends AbstractHandlerExceptionResolver i
             body = converter.convert(error);
         }
 
-        return handleResponseBody(body, webRequest);
+        return handleResponseBody(body, webRequest, handler);
     }
 
     private void applyStatusIfPossible(ServletWebRequest webRequest, RestError error) {
@@ -152,7 +159,8 @@ public class CustomerExceptionHandler extends AbstractHandlerExceptionResolver i
      *  才能将 body 写入到 response
      */
     @SuppressWarnings("unchecked")
-    private ModelAndView handleResponseBody(Object body, ServletWebRequest webRequest) throws ServletException, IOException {
+    private ModelAndView handleResponseBody(Object body, ServletWebRequest webRequest,Object handler)
+            throws ServletException, IOException {
 
         HttpInputMessage inputMessage = new ServletServerHttpRequest(webRequest.getRequest());
 
@@ -174,12 +182,19 @@ public class CustomerExceptionHandler extends AbstractHandlerExceptionResolver i
             for (MediaType acceptedMediaType : acceptedMediaTypes) {
                 for (HttpMessageConverter messageConverter : converters) {
                     if (messageConverter.canWrite(bodyType, acceptedMediaType)) {
-                        messageConverter.write(body, acceptedMediaType, outputMessage);
 
-                        //return empty model and view to short circuit the iteration and to let
-                        //Spring know that we've rendered the view ourselves:
-                        //如果想返回一个统一处理的错误页面, 该如何操作呢
-                        return new ModelAndView();
+                        //判断页面请求还是 ajax 请求
+                        String errorPage = getResponsePage(handler);
+                        if(ValidatorUtil.isNotEmpty(errorPage)){
+                            return new ModelAndView(errorPage);
+                        }else{
+                            messageConverter.write(body, acceptedMediaType, outputMessage);
+
+                            //return empty model and view to short circuit the iteration and to let
+                            //Spring know that we've rendered the view ourselves:
+                            return new ModelAndView();
+                        }
+
                     }
                 }
             }
@@ -207,5 +222,55 @@ public class CustomerExceptionHandler extends AbstractHandlerExceptionResolver i
 
     public void setErrorConverter(RestErrorConverter<?> errorConverter) {
         this.errorConverter = errorConverter;
+    }
+
+    //返回错误页面
+    private String getResponsePage(Object handler){
+        if(handler == null)
+            return null;
+
+        HandlerMethod handlerMethod = (HandlerMethod) handler;
+        Method method = handlerMethod.getMethod();
+
+        ResponseMapping responseMapping
+                = AnnotationUtils.findAnnotation(method, ResponseMapping.class);
+        if(responseMapping == null){
+            if(isJsonRequest(handlerMethod)){
+                return null;
+            }else{
+                return "views/error";
+            }
+        }
+
+        if(ResponseType.PAGE == responseMapping.type()){
+            return responseMapping.page();
+        }
+
+        return null;
+    }
+
+    private boolean isJsonRequest(HandlerMethod handlerMethod){
+        Method method = handlerMethod.getMethod();
+
+        //返回类型是 void 的
+        @SuppressWarnings("rawtypes")
+        Class returnType = method.getReturnType();
+        if(returnType != null && "void".equals(returnType.getName())){
+            return true;
+        }
+
+        //是否使用了 ResponseBody 注解
+        ResponseBody responseBodyAnn
+                = AnnotationUtils.findAnnotation(method, ResponseBody.class);
+        if(responseBodyAnn == null){
+            //判断contrller 上是否使用了@ReponseBody 注解
+            responseBodyAnn
+                    = AnnotationUtils.findAnnotation(handlerMethod.getBeanType(), ResponseBody.class);
+        }
+
+        if(responseBodyAnn != null)
+            return true;
+
+        return false;
     }
 }
