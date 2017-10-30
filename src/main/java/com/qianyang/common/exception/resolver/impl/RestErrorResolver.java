@@ -37,7 +37,6 @@ public class RestErrorResolver implements ErrorResolver<RestError>, MessageSourc
 
     private MessageSource messageSource;
 
-    @Autowired
     private LocaleResolver localeResolver;
 
     //异常与描述的映射关系
@@ -424,5 +423,17 @@ public class RestErrorResolver implements ErrorResolver<RestError>, MessageSourc
         }
 
         return msg;
+    }
+
+    public MessageSource getMessageSource() {
+        return messageSource;
+    }
+
+    public LocaleResolver getLocaleResolver() {
+        return localeResolver;
+    }
+
+    public void setLocaleResolver(LocaleResolver localeResolver) {
+        this.localeResolver = localeResolver;
     }
 }

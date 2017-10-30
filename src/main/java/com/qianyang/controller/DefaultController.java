@@ -10,7 +10,6 @@ import javax.servlet.http.HttpServletRequest;
  * 响应无效的URL
  */
 @Controller
-
 public class DefaultController {
 
     @RequestMapping("/**")

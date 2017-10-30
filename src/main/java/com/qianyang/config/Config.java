@@ -1,6 +1,10 @@
 package com.qianyang.config;
 
 
+import com.qianyang.common.exception.handler.CustomerExceptionHandler;
+import com.qianyang.common.exception.resolver.ErrorResolver;
+import com.qianyang.common.exception.resolver.impl.RestErrorResolver;
+import com.qianyang.common.spring.http.converter.impl.MapRestErrorConverter;
 import com.qianyang.common.spring.http.converter.json.DefaultJacksonHttpMessageConverter;
 import org.springframework.web.servlet.i18n.AcceptHeaderLocaleResolver;
 import org.springframework.context.annotation.Bean;
@@ -9,6 +13,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerExceptionResolver;
 import org.springframework.web.servlet.view.JstlView;
 import org.springframework.web.servlet.view.UrlBasedViewResolver;
 
@@ -38,9 +43,52 @@ public class Config extends WebMvcConfigurerAdapter {
         return resolver;
     }
 
+    /*
+     * 设置 JSON HttpMessageConverter
+     */
     @Bean
     public DefaultJacksonHttpMessageConverter defaultJacksonHttpMessageConverter(){
         return new DefaultJacksonHttpMessageConverter();
+    }
+
+    /*
+     * 设置异常解析器
+     */
+    @Bean
+    public RestErrorResolver errorResolver(){
+        RestErrorResolver resolver = new RestErrorResolver();
+        resolver.setLocaleResolver(localResolver());
+
+        return resolver;
+    }
+
+    @Bean
+    public AcceptHeaderLocaleResolver localResolver(){
+        return new AcceptHeaderLocaleResolver();
+    }
+
+    @Bean
+    public AnnotationMethodHandlerExceptionResolver annotationMethodHandlerExceptionResolver(){
+        AnnotationMethodHandlerExceptionResolver annotationMethodHandlerExceptionResolver
+                = new AnnotationMethodHandlerExceptionResolver();
+
+        //Allow Exceptions to be handled in annotated methods if desired.  Otherwise fallback to the
+        //'restExceptionResolver' below:
+        annotationMethodHandlerExceptionResolver.setOrder(0);
+
+        return annotationMethodHandlerExceptionResolver;
+    }
+
+    @Bean
+    public CustomerExceptionHandler customerExceptionHandler(){
+        CustomerExceptionHandler customerExceptionHandler = new CustomerExceptionHandler();
+
+        customerExceptionHandler.setOrder(100);
+
+        customerExceptionHandler.setErrorConverter(new MapRestErrorConverter());
+        customerExceptionHandler.setErrorResolver(errorResolver());
+
+        return customerExceptionHandler;
     }
 
 
@@ -64,10 +112,6 @@ public class Config extends WebMvcConfigurerAdapter {
         converters.add(0, defaultJacksonHttpMessageConverter());
     }
 
-    @Bean
-    public AcceptHeaderLocaleResolver localResolver(){
-        return new AcceptHeaderLocaleResolver();
-    }
 }
 
 

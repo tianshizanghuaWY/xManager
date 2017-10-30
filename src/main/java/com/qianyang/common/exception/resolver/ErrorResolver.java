@@ -1,6 +1,7 @@
 package com.qianyang.common.exception.resolver;
 
 import org.springframework.web.context.request.ServletWebRequest;
+import org.springframework.web.servlet.LocaleResolver;
 
 /**
  * <br>
@@ -14,4 +15,6 @@ public interface ErrorResolver<T> {
      * @ex 所抛出的异常
      */
     public T errorResolver(ServletWebRequest request, Object handler, Exception ex);
+
+    public void setLocaleResolver(LocaleResolver localeResolver);
 }
