@@ -6,6 +6,7 @@ import com.qianyang.common.exception.resolver.ErrorResolver;
 import com.qianyang.common.exception.resolver.impl.RestErrorResolver;
 import com.qianyang.common.spring.http.converter.impl.MapRestErrorConverter;
 import com.qianyang.common.spring.http.converter.json.DefaultJacksonHttpMessageConverter;
+import org.springframework.context.annotation.Import;
 import org.springframework.web.servlet.i18n.AcceptHeaderLocaleResolver;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -28,7 +29,8 @@ import java.util.List;
  */
 @Configuration
 @EnableWebMvc
-@ComponentScan("com.qianyang")
+@Import(MyBatisConfig.class) //引入其他配置项
+@ComponentScan("com.qianyang.controller") //这里仅仅扫描SpringMvc 相关的Bean
 public class Config extends WebMvcConfigurerAdapter {
 
     /*

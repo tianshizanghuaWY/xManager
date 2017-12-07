@@ -46,10 +46,12 @@
         <!-- 关闭abanded连接时输出错误日志 -->
         <property name="logAbandoned" value="true" />
 
-        <!--密码加密-->
+        <!--密码加密
         <property name="filters" value="config" />
 
         <property name="connectionProperties" value="config.decrypt=true;config.decrypt.key=${publickey}" />
+
+        -->
         <!-- 监控数据库过滤链 -->
         <property name="proxyFilters">
             <list>

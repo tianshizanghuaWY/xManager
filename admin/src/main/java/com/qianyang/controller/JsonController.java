@@ -5,7 +5,7 @@ import com.qianyang.common.domain.JsonResultModel;
 import com.qianyang.common.enums.ResponseType;
 import com.qianyang.common.enums.ResultStatusCode;
 import com.qianyang.common.exception.UnknownResourceException;
-import com.qianyang.common.model.User;
+import com.qianyang.model.User;
 import org.omg.CORBA.portable.UnknownException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,14 +24,14 @@ public class JsonController {
     @ResponseBody
     @RequestMapping("/test")
     public JsonResultModel<User> test(){
-        return new JsonResultModel<User>(new User("wangyuan", 1))
+        return new JsonResultModel<User>(new User("wangyuan", "2"))
                 .code(ResultStatusCode.SUCCESS);
     }
 
     @ResponseBody
     @RequestMapping("/testy")
     public User testy(){
-        return new User("wangyuan", 1);
+        return new User("wangyuan", "1");
     }
 
     @RequestMapping("/page")
@@ -43,7 +43,7 @@ public class JsonController {
     @RequestMapping("/testJson")
     public JsonResultModel<User> testJson(){
         Map<String, User> users = new HashMap<String, User>();
-        users.put("u1", new User("wangyuan", 2));
+        users.put("u1", new User("wangyuan", "2"));
         users.put("u2", new User());
         users.put("u3", null);
 
