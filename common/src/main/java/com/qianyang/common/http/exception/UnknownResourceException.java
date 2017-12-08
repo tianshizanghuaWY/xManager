@@ -1,4 +1,4 @@
-package com.qianyang.common.exception;
+package com.qianyang.common.http.exception;
 
 /**
  */

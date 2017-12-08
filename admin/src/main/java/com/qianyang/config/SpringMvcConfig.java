@@ -1,19 +1,17 @@
 package com.qianyang.config;
 
 
-import com.qianyang.common.exception.handler.CustomerExceptionHandler;
-import com.qianyang.common.exception.resolver.ErrorResolver;
-import com.qianyang.common.exception.resolver.impl.RestErrorResolver;
-import com.qianyang.common.spring.http.converter.impl.MapRestErrorConverter;
-import com.qianyang.common.spring.http.converter.json.DefaultJacksonHttpMessageConverter;
-import org.springframework.context.annotation.Import;
-import org.springframework.web.servlet.i18n.AcceptHeaderLocaleResolver;
+import com.qianyang.common.http.converter.impl.MapRestErrorConverter;
+import com.qianyang.common.http.converter.json.DefaultJacksonHttpMessageConverter;
+import com.qianyang.common.http.exception.handler.CustomerExceptionHandler;
+import com.qianyang.common.http.exception.resolver.impl.RestErrorResolver;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import org.springframework.web.servlet.i18n.AcceptHeaderLocaleResolver;
 import org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerExceptionResolver;
 import org.springframework.web.servlet.view.JstlView;
 import org.springframework.web.servlet.view.UrlBasedViewResolver;
@@ -30,7 +28,7 @@ import java.util.List;
 @Configuration
 @EnableWebMvc
 //@Import(MyBatisConfig.class) //引入其他配置项（不要引入了，现在各自管理各自的配置文件）
-@ComponentScan("com.qianyang.controller") //这里仅仅扫描SpringMvc 相关的Bean
+@ComponentScan("com.qianyang.*.controller") //这里仅仅扫描SpringMvc 相关的Bean
 public class SpringMvcConfig extends WebMvcConfigurerAdapter {
 
     /*
