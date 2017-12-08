@@ -1,7 +1,7 @@
-package com.qianyang.common.spring.http.converter.impl;
+package com.qianyang.common.http.converter.impl;
 
-import com.qianyang.common.exception.domain.RestError;
-import com.qianyang.common.spring.http.converter.RestErrorConverter;
+import com.qianyang.common.http.exception.RestError;
+import com.qianyang.common.http.converter.RestErrorConverter;
 import org.springframework.http.HttpStatus;
 
 import java.util.LinkedHashMap;

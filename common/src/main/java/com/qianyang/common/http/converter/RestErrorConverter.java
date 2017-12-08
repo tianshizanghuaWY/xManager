@@ -1,6 +1,6 @@
-package com.qianyang.common.spring.http.converter;
+package com.qianyang.common.http.converter;
 
-import com.qianyang.common.exception.domain.RestError;
+import com.qianyang.common.http.exception.RestError;
 import org.springframework.core.convert.converter.Converter;
 
 /**

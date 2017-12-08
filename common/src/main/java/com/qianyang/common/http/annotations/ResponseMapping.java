@@ -1,6 +1,6 @@
-package com.qianyang.common.annotations;
+package com.qianyang.common.http.annotations;
 
-import com.qianyang.common.enums.ResponseType;
+import com.qianyang.common.http.enums.ResponseType;
 
 import java.lang.annotation.*;
 

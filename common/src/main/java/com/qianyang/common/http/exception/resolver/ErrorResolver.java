@@ -1,4 +1,4 @@
-package com.qianyang.common.exception.resolver;
+package com.qianyang.common.http.exception.resolver;
 
 import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.servlet.LocaleResolver;

@@ -1,18 +1,15 @@
-package com.qianyang.common.exception.handler;
+package com.qianyang.common.http.exception.handler;
 
-import com.qianyang.common.annotations.ResponseMapping;
-import com.qianyang.common.enums.ResponseType;
-import com.qianyang.common.exception.domain.RestError;
-import com.qianyang.common.exception.resolver.ErrorResolver;
-import com.qianyang.common.exception.resolver.impl.RestErrorResolver;
-import com.qianyang.common.spring.http.converter.RestErrorConverter;
-import com.qianyang.common.spring.http.converter.impl.MapRestErrorConverter;
-import com.qianyang.common.spring.http.converter.json.DefaultJacksonHttpMessageConverter;
+import com.qianyang.common.http.annotations.ResponseMapping;
+import com.qianyang.common.http.converter.RestErrorConverter;
+import com.qianyang.common.http.converter.json.DefaultJacksonHttpMessageConverter;
+import com.qianyang.common.http.enums.ResponseType;
+import com.qianyang.common.http.exception.RestError;
+import com.qianyang.common.http.exception.resolver.impl.RestErrorResolver;
 import com.qianyang.common.util.ValidatorUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.http.HttpInputMessage;
 import org.springframework.http.HttpOutputMessage;
@@ -20,7 +17,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.server.ServletServerHttpRequest;
 import org.springframework.http.server.ServletServerHttpResponse;
-import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.method.HandlerMethod;
@@ -29,7 +25,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupp
 import org.springframework.web.servlet.handler.AbstractHandlerExceptionResolver;
 import org.springframework.web.util.WebUtils;
 
-import javax.annotation.Resource;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

@@ -1,4 +1,4 @@
-package com.qianyang.common.exception.domain;
+package com.qianyang.common.http.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.util.ObjectUtils;

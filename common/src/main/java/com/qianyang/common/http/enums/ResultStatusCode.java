@@ -1,4 +1,4 @@
-package com.qianyang.common.enums;
+package com.qianyang.common.http.enums;
 
 /**
  * 接口请求状态码

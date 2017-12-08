@@ -1,4 +1,4 @@
-package com.qianyang.common.spring.http.converter.json;
+package com.qianyang.common.http.converter.json;
 
 import org.codehaus.jackson.*;
 import org.codehaus.jackson.map.JsonSerializer;

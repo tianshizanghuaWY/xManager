@@ -12,6 +12,7 @@
     <modules>
         <module>admin</module>
         <module>service</module>
+        <module>common</module>
     </modules>
 
     <properties>

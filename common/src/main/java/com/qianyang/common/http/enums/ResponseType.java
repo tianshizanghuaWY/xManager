@@ -1,4 +1,4 @@
-package com.qianyang.common.enums;
+package com.qianyang.common.http.enums;
 
 /**
  * 请求类型

@@ -1,6 +1,6 @@
-package com.qianyang.controller;
+package com.qianyang.web.controller;
 
-import com.qianyang.common.exception.UnknownResourceException;
+import com.qianyang.common.http.exception.UnknownResourceException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 

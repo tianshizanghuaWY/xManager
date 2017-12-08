@@ -1,6 +1,6 @@
-package com.qianyang.common.domain;
+package com.qianyang.common.http;
 
-import com.qianyang.common.enums.ResultStatusCode;
+import com.qianyang.common.http.enums.ResultStatusCode;
 import org.springframework.http.HttpStatus;
 
 import java.io.Serializable;

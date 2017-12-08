@@ -1,13 +1,12 @@
-package com.qianyang.common.exception.resolver.impl;
+package com.qianyang.common.http.exception.resolver.impl;
 
-import com.qianyang.common.exception.UnknownResourceException;
-import com.qianyang.common.exception.domain.RestError;
-import com.qianyang.common.exception.resolver.ErrorResolver;
+import com.qianyang.common.http.exception.UnknownResourceException;
+import com.qianyang.common.http.exception.RestError;
+import com.qianyang.common.http.exception.resolver.ErrorResolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.TypeMismatchException;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.MessageSourceAware;
 import org.springframework.http.HttpStatus;
@@ -20,7 +19,6 @@ import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.servlet.LocaleResolver;
-import org.springframework.web.servlet.i18n.AcceptHeaderLocaleResolver;
 import org.springframework.web.servlet.mvc.multiaction.NoSuchRequestHandlingMethodException;
 
 import java.util.Collections;

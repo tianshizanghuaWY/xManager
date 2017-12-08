@@ -1,12 +1,11 @@
-package com.qianyang.controller;
+package com.qianyang.web.controller;
 
-import com.qianyang.common.annotations.ResponseMapping;
-import com.qianyang.common.domain.JsonResultModel;
-import com.qianyang.common.enums.ResponseType;
-import com.qianyang.common.enums.ResultStatusCode;
-import com.qianyang.common.exception.UnknownResourceException;
+import com.qianyang.common.http.annotations.ResponseMapping;
+import com.qianyang.common.http.JsonResultModel;
+import com.qianyang.common.http.enums.ResponseType;
+import com.qianyang.common.http.enums.ResultStatusCode;
+import com.qianyang.common.http.exception.UnknownResourceException;
 import com.qianyang.model.User;
-import org.omg.CORBA.portable.UnknownException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
