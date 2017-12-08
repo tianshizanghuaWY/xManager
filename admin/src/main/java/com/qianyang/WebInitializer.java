@@ -2,7 +2,10 @@ package com.qianyang;
 
 import com.qianyang.config.MyBatisConfig;
 import com.qianyang.config.SpringMvcConfig;
+import com.qianyang.web.fileter.MyFilter;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
+
+import javax.servlet.Filter;
 
 /**
  * 代替 web.xml, 初始化 DispatchServlet
@@ -49,5 +52,15 @@ public class WebInitializer extends AbstractAnnotationConfigDispatcherServletIni
     @Override
     protected String[] getServletMappings() {
         return new String[]{"/"};
+    }
+
+    /*
+     * 添加过滤器
+     */
+    @Override
+    protected Filter[] getServletFilters() {
+        //return super.getServletFilters();
+
+        return new Filter[]{new MyFilter()};
     }
 }
