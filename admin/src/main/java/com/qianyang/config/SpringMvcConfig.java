@@ -29,9 +29,9 @@ import java.util.List;
  */
 @Configuration
 @EnableWebMvc
-@Import(MyBatisConfig.class) //引入其他配置项
+//@Import(MyBatisConfig.class) //引入其他配置项（不要引入了，现在各自管理各自的配置文件）
 @ComponentScan("com.qianyang.controller") //这里仅仅扫描SpringMvc 相关的Bean
-public class Config extends WebMvcConfigurerAdapter {
+public class SpringMvcConfig extends WebMvcConfigurerAdapter {
 
     /*
      * JSP 视图解析器
